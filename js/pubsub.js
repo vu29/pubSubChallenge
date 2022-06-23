@@ -1,33 +1,31 @@
-class PubSub{
-    constructor(){
-        this.subscriptions = {};
+class PubSub {
+  constructor() {
+    this.subscriptions = {};
+  }
+
+  on(subscriptionsName, callBack) {
+    if (!Array.isArray(this.subscriptions[subscriptionsName])) {
+      this.subscriptions[subscriptionsName] = [];
     }
 
-    on(subscriptionsName,callBack){
-        
-        if(!Array.isArray(this.subscriptions[subscriptionsName])){
-            this.subscriptions[subscriptionsName] = [];
-        }
+    const subscriptionArray = this.subscriptions[subscriptionsName];
+    subscriptionArray.push(callBack);
 
-        let subscriptionArray = this.subscriptions[subscriptionsName];
-        subscriptionArray.push(callBack);
+    return () => {
+      subscriptionArray.splice(subscriptionArray.indexOf(callBack), 1);
+    };
+  }
 
-        return () => {
-            subscriptionArray.splice(subscriptionArray.indexOf(callBack),1);
-        }
+  emit(subscriptionName, callBackArg) {
+    const subscriptionArray = this.subscriptions[subscriptionName];
+    if (!Array.isArray(subscriptionArray)) {
+      // TODO : THROW EXCEPTION
     }
 
-    emit(subscriptionName,callBackArg){
-        let subscriptionArray = this.subscriptions[subscriptionName];
-        if(!Array.isArray(subscriptionArray)){
-            // TODO : THROW EXCEPTION
-        }
-
-        subscriptionArray.forEach(callBack => {
-            callBack(callBackArg);
-        });
-    }
-
+    subscriptionArray.forEach((callBack) => {
+      callBack(callBackArg);
+    });
+  }
 }
 
 module.exports.PubSub = PubSub;
