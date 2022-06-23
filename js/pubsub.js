@@ -18,9 +18,7 @@ class PubSub {
 
   emit(subscriptionName, callBackArg) {
     const subscriptionArray = this.subscriptions[subscriptionName];
-    if (!Array.isArray(subscriptionArray)) {
-      // TODO : THROW EXCEPTION
-    }
+    if (!Array.isArray(subscriptionArray)) return;
 
     subscriptionArray.forEach((callBack) => {
       callBack(callBackArg);
